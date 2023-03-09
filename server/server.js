@@ -13,11 +13,11 @@ const http = require("http");
 const server = http.Server(app);
 const io = require("socket.io")(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: process.env.ORIGIN_URL,
         methods: ["GET", "POST"]
     },
     allowRequest: (req, callback) =>
-        callback(null, req.headers.referer.startsWith("http://localhost:3000"))
+        callback(null, req.headers.referer.startsWith(process.env.ORIGIN_URL))
 });
 
 
@@ -26,7 +26,7 @@ const io = require("socket.io")(server, {
 //               COOKIE SESSION                 //
 var cookieSession = require('cookie-session');
 const cookieSessionMiddleware = cookieSession({
-    secret: `I am motivated!`,
+    secret: `${process.env.SESSION_SECRET}`,
     maxAge: 1000 * 60 * 60 * 1, // 1 heure
     sameSite: true // Prevents Cross Site Request Forgery (CSRF) attacks
 });

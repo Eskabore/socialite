@@ -67,7 +67,7 @@ export default class Login extends Component {
         return (
             <Box sx={{ maxWidth: 400, mx: 'auto', my: 4, p: 2 }}>
                 <h1>Login</h1>
-                
+
                 {this.state.error && (
                     <p>Something went wrong! Please try again.</p>
                 )}

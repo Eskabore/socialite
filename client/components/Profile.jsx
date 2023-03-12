@@ -11,10 +11,11 @@ export default function Profile(props) {
     }
 
     // Check that picture is a valid URL
-    const pictureUrl = new URL(picture);
-    if (!pictureUrl.protocol.startsWith('http')) {
+    /*const pictureUrl = new URL(picture);
+    if (!pictureUrl.protocol.startsWith('https')) {
         return <div>Error: Invalid picture URL</div>;
     }
+    */
 
     return (
         <section className='profile'>

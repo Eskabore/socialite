@@ -1,93 +1,77 @@
-import { Component } from "react";
+import { useState } from "react";
+import { Button, TextField, Box } from "@mui/material";
 
-export default class Uploader extends Component {
-    constructor(props) {
-        super(props);
+export default function Uploader(props) {
+    const [file, setFile] = useState(null);
+    const [error, setError] = useState(false);
 
-        this.state = {
-            file: null,
-            error: false
-        };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.pictureUpload = this.pictureUpload.bind(this);
-    }
-
-
-
-
-    pictureUpload(e) {
+    const pictureUpload = (e) => {
         e.preventDefault();
 
-        // Using FormaData API to simpplify 'POST of file
+        // Using FormData API to simplify 'POST of file
         const formData = new FormData();
 
         // Input name is the first argument of `append` function !
-        formData.append("file", this.state.file);
+        formData.append("file", file);
 
-        console.log("This.ste.file: ", this.state.file);
+        console.log("This.state.file: ", file);
 
-
-        fetch('/picture.json', {
-            method: 'POST',
-            body: formData
+        fetch("/picture.json", {
+            method: "POST",
+            body: formData,
         })
             .then((response) => {
                 console.log("response.ok: ", response.ok);
 
-                return response.json( );
+                return response.json();
             })
             .then((data) => {
-
-                if ( data.picture == "") {
-                    this.setState( { error: true });
-
+                if (data.picture === "") {
+                    setError(true);
                 } else {
-
-                    console.log("fetch '/picture' <Uploader />. this.state.file: ",
-                        this.state.file,
-                        "data.picture is: ", data.picture
+                    console.log(
+                        "fetch '/picture' <Uploader />. file is: ",
+                        file,
+                        "data.picture is: ",
+                        data.picture
                     );
-                    this.props.uploadImage(data.picture);
+                    props.uploadImage(data.picture);
                 }
+            })
+            .catch((error) => {
+                console.log("Error uploading picture: ", error);
+                setError(true);
             });
-    }
+    };
 
-    handleChange(e) {
-        this.setState ( { file: e.target.files[0] }); // event is linked to files index 0
-    }
+    const handleChange = (e) => {
+        setFile(e.target.files[0]); // event is linked to files index 0
+    };
 
-    render() {
-        return (
+    return (
+        <Box>
+            {error && (
+                <p>Something went wrong while uploading picture!</p>
+            )}
+
+
+
             <div>
-                <div>
-                    {this.state.error && (
-                        <p>
-                        Something went wrong while uploading picture!
-                        </p>
-                    )}
-                </div>
-
-                <div className="button" onClick={this.props.toggleUploader}>  Hello Uploader </div>
-
-                <div>
-                    <p>
-                    Select a picture to upload
-                    </p>
-                    <form onSubmit={ this.pictureUpload }>
-
-                        <input onChange={this.handleChange}
-                            type="file"
-                            name="file"
-                            id="file"
-                            accept="image/*"
-                            placeholder="Upload"
-                        />
-                        <button>Upload
-                        </button>
-                    </form>
-                </div>
+                <p>Select a picture to upload</p>
+                <form onSubmit={pictureUpload}>
+                    <input
+                        onChange={handleChange}
+                        type="file"
+                        name="file"
+                        id="file"
+                        accept="image/*"
+                        placeholder="Upload"
+                    />
+                    <Button variant="contained" component="label" type="submit">
+                        Upload
+                    </Button>
+                </form>
             </div>
-        );
-    }
+        </Box>
+    );
 }

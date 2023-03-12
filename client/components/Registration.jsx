@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
+import { Button, TextField, Box } from "@mui/material";
 
 export default class Registration extends Component {
     constructor(props) {
@@ -71,58 +72,74 @@ export default class Registration extends Component {
 
     render() {
         return (
-            <div>
-                <h1>This is the registration component</h1>
-                <div className="error">{this.state.error && (
-                    <p>Something went wrong! Please try again.
-                    </p>
-                )}</div>
+            <Box sx={{ maxWidth: 400, mx: 'auto', my: 4, p: 2 }}>
+                <h1>Register</h1>
+                
+                {this.state.error && (
+                    <p>Something went wrong! Please try again.</p>
+                )}
 
 
                 <form onSubmit={ this.handleSubmit }>
-                    <input
-                        type="text"
-                        name="first"
-                        onChange={this.handleChange}
-                        value={this.state.first}
-                        placeholder="First name"
-                    />
-                    <input
-                        type="text"
-                        name="last"
-                        onChange={this.handleChange}
-                        value={this.state.last}
-                        placeholder="Last name"
-                    />
+                    <Box sx={{ mb: 2 }}>
+                        <TextField
+                            fullWidth
+                            label="First Name:"
+                            type="text"
+                            name="first"
+                            onChange={this.handleChange}
+                            value={this.state.first}
+                        />
+                    </Box>
 
-                    <input
-                        type="email"
-                        name="email"
-                        onChange={this.handleChange}
-                        value={this.state.email}
-                        placeholder="Email"
-                    />
+                    <Box sx={{ mb: 2 }}>
+                        <TextField
+                            fullWidth
+                            label="Last Name"
+                            type="text"
+                            name="last"
+                            onChange={this.handleChange}
+                            value={this.state.last}
+                        />
+                    </Box>
 
-                    <input
-                        type="password"
-                        name="password"
-                        autoComplete="newPassword"
-                        onChange={this.handleChange}
-                        value={this.state.password}
-                        placeholder="Password"
-                    />
+                    <Box sx={{ mb: 2 }}>
+                        <TextField
+                            fullWidth
+                            label="Email"
+                            type="email"
+                            name="email"
+                            onChange={this.handleChange}
+                            value={this.state.email}
+                        />
+                    </Box>
 
-                    <div>
-                        <button type="submit">Register Now</button>
-                    </div>
+                    <Box sx={{ mb: 2 }}>
+                        <TextField
+                            fullWidth
+                            label="Password"
+                            type="password"
+                            name="password"
+                            autoComplete="newPassword"
+                            onChange={this.handleChange}
+                            value={this.state.password}
+                            placeholder="Password"
+                        />
+                    </Box>
+
+                    <Box sx={{ textAlign: 'center', mt: 2 }}>
+                        <Button variant="contained" color="primary" type="submit">
+                        Register Now
+                        </Button>
+                    </Box>
                 </form>
 
-                <button>
-                    <Link to="/login">
+                <Box sx={{ textAlign: 'center', mt: 2 }}>
+                    <Button component={Link} to="/login">
                         Log In
-                    </Link>
-                </button>
-            </div>
+                    </Button>
+                </Box>
+            </Box>
         );
     }
 }

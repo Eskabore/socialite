@@ -1,7 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap");
+
 body {
-    background-color: ghostwhite;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  height: 100%;
+  width: 100%;
+  font-family: "Rubik", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: ghostwhite;
 }
+
 
 .button {
     display: block;
@@ -20,3 +25,4 @@ img {
     width: 12.5em;
     height: auto;
 }
+

@@ -212,7 +212,7 @@ OR (accepted = false AND recipient_id = $1 AND users.id = friendships.sender_id)
     );
 };
 
-// ------------------  QUERIES for messages PART-10 ------------------ //
+// ------------------  SOCKET.IO - Chat ------------------ //
 
 // SAVE new message
 exports.addNewMessage = (userId, message) => {
@@ -236,10 +236,55 @@ exports.getLast10Messages = () => {
     );
 };
 
-// Add a new user
+// ------------------  SOCKET.IO - connections ------------------ //
+
+// Add new users to the socket
 module.exports.getUser = (userId) => {
     return db.query(
         `SELECT first, last, picture FROM users WHERE id = $1`,
+        [
+            userId
+        ]
+    );
+};
+
+
+// ------------------  QUERIES for deleting user's account ------------------ //
+
+// Delete user's messages history
+module.exports.deleteMessages = (userId) => {
+    return db.query(
+        `DELETE FROM messages WHERE sender_id = $1`,
+        [
+            userId
+        ]
+    );
+};
+
+// Delete friendships
+module.exports.deleteFriendships = (userId) => {
+    return db.query(
+        `DELETE FROM friendships WHERE sender_id = $1 OR recipient_id = $1`,
+        [
+            userId
+        ]
+    );
+};
+
+// Delete reset code
+module.exports.deleteResetCode = (email) => {
+    return db.query(
+        `DELETE FROM reset_code WHERE email = $1`,
+        [
+            email
+        ]
+    );
+};
+
+// Delete user profile information
+module.exports.deleteUser = (userId) => {
+    return db.query(
+        `DELETE FROM users WHERE id = $1`,
         [
             userId
         ]

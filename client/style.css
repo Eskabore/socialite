@@ -15,3 +15,8 @@ body {
     font-weight: bold;
     line-height: 25px;
 }
+
+img {
+    width: 12.5em;
+    height: auto;
+}

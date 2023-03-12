@@ -1,5 +1,6 @@
 import { Component } from "react";
 import { Link } from "react-router-dom";
+import { Button, TextField, Box } from '@mui/material';
 
 export default class Login extends Component {
     constructor(props) {
@@ -8,8 +9,7 @@ export default class Login extends Component {
         this.state = {
             email: "",
             password: "",
-            error: false,
-        };
+            error: false,        };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -65,48 +65,56 @@ export default class Login extends Component {
 
     render() {
         return (
-            <div>
-                <h1>This is the login component</h1>
-                <div className="error">{this.state.error && (
-                    <p>Something went wrong! Please try again.
-                    </p>
-                )}</div>
+            <Box sx={{ maxWidth: 400, mx: 'auto', my: 4, p: 2 }}>
+                <h1>Login</h1>
+                
+                {this.state.error && (
+                    <p>Something went wrong! Please try again.</p>
+                )}
 
 
                 <form onSubmit={this.handleSubmit}>
-                    <input
-                        type="email"
-                        name="email"
-                        onChange={this.handleChange}
-                        value={this.state.email}
-                        placeholder="Email"
-                    />
+                    <Box sx={{ mb: 2 }}>
+                        <TextField
+                            fullWidth
+                            label="Email"
+                            type="email"
+                            name="email"
+                            onChange={this.handleChange}
+                            value={this.state.email}
+                        />
+                    </Box>
 
-                    <input
-                        type="password"
-                        name="password"
-                        autoComplete="currentPassword"
-                        onChange={this.handleChange}
-                        value={this.state.password}
-                        placeholder="Password"
-                    />
+                    <Box sx={{ mb: 2 }}>
+                        <TextField
+                            fullWidth
+                            label="Password"
+                            type="password"
+                            name="password"
+                            autoComplete="currentPassword"
+                            onChange={this.handleChange}
+                            value={this.state.password}
+                            placeholder="Password"
+                        />
+                    </Box>
 
-                    <div>
-                        <button type="submit">Login</button>
-                    </div>
+                    <Box sx={{ textAlign: 'center' }}>
+                        <Button variant="contained" color="primary" type="submit">
+                        Login
+                        </Button>
+                    </Box>
                 </form>
 
-                <button>
-                    <Link to="/password">
+                <Box sx={{ textAlign: 'center', mt: 2 }}>
+                    <Button component={Link} to="/password" sx={{ mr: 1 }}>
                         Reset Password
-                    </Link>
-                </button>
-                <button>
-                    <Link to="/registration">
+                    </Button>
+
+                    <Button component={Link} to="/registration">
                         Create an Account
-                    </Link>
-                </button>
-            </div>
+                    </Button>
+                </Box>
+            </Box>
         );
     }
 }

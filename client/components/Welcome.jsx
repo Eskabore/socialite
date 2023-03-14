@@ -3,6 +3,7 @@ import App from './App';
 import Registration from "./Registration";
 import Login from "./Login";
 import ResetPassword from "./ResetPassword";
+import HomePage from './HomePage';
 
 export default function Welcome() {
     return (
@@ -20,7 +21,7 @@ export default function Welcome() {
             <div>
                 <BrowserRouter>
                     <Routes>
-                        <Route exact path="/"  element={<App />}>
+                        <Route exact path="/"  element={<HomePage />}>
                         </Route>
                         <Route path="/registration" element={<Registration />}>
                         </Route>

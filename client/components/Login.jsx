@@ -94,7 +94,6 @@ export default class Login extends Component {
                             autoComplete="currentPassword"
                             onChange={this.handleChange}
                             value={this.state.password}
-                            placeholder="Password"
                         />
                     </Box>
 

@@ -1,112 +1,91 @@
-import { Component } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-export default class Login extends Component {
-    constructor(props) {
-        super(props);
+export default function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState(false);
+    const registeredUser = useRef({ email: "", password: "" });
 
-        this.state = {
-            email: "",
-            password: "",
-            error: false,
-        };
+    const handleChange = (e) => {
+        const { name, value } = e.currentTarget;
+        if (name === "email") {
+            setEmail(value);
+        } else if (name === "password") {
+            setPassword(value);
+        }
+    };
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+    useEffect(() => {
+        if (registeredUser.current.email !== "" && registeredUser.current.password !== "") {
+            fetch("/login", {
+                method: "POST",
+                body: JSON.stringify(registeredUser.current),
+                headers: { "Content-Type": "application/json" },
+            })
+                .then((response) => {
+                    console.log("response is: ", response.ok);
+                    if (response.ok) {
+                        // User is logged-in
+                        // -> reload page to show logged-in
+                        location.reload();
+                    } else {
+                        // Update 'error' property in state
+                        setError(true);
+                    }
+                })
+                .catch((error) => {
+                    console.log("Error (/login): ", error);
+                });
+        }
+    }, [registeredUser]);
 
-    handleChange(e) {
-        console.log(e);
-
-        this.setState(
-            {
-                [e.currentTarget.name]: e.currentTarget.value,
-            },
-            () => {
-                console.log(this.state);
-            }
-        );
-    }
-
-    handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
 
         console.log("About to submit the form!");
-        console.log(this.state);
+        console.log({ email, password });
 
-        const registeredUser = {};
+        registeredUser.current.email = email;
+        registeredUser.current.password = password;
+    };
 
-        registeredUser.email = this.state.email;
-        registeredUser.password = this.state.password;
-
-        console.log(registeredUser);
-
-        fetch("/login", {
-            method: "POST",
-            body: JSON.stringify(registeredUser),
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then((response) => {
-                console.log("response is: ", response.ok);
-
-                if (response.ok) {
-                    // User is logged-in
-                    // -> reload page to show logged-in
-                    location.reload();
-                } else {
-                    // Update 'error' property in state
-                    this.setState({ error: true });
-                }
-            })
-            .catch((error) => {
-                console.log("Error (/login): ", error);
-            });
-    }
-
-    render() {
-        return (
-            <div>
-                <h1>This is the login component</h1>
-                <div className="error">{this.state.error && (
-                    <p>Something went wrong! Please try again.
-                    </p>
-                )}</div>
-
-
-                <form onSubmit={this.handleSubmit}>
-                    <input
-                        type="email"
-                        name="email"
-                        onChange={this.handleChange}
-                        value={this.state.email}
-                        placeholder="Email"
-                    />
-
-                    <input
-                        type="password"
-                        name="password"
-                        autoComplete="currentPassword"
-                        onChange={this.handleChange}
-                        value={this.state.password}
-                        placeholder="Password"
-                    />
-
-                    <div>
-                        <button type="submit">Login</button>
-                    </div>
-                </form>
-
-                <button>
-                    <Link to="/password">
-                        Reset Password
-                    </Link>
-                </button>
-                <button>
-                    <Link to="/registration">
-                        Create an Account
-                    </Link>
-                </button>
+    return (
+        <div>
+            <h1>This is the login component</h1>
+            <div className="error">
+                {error && <p>Something went wrong! Please try again.</p>}
             </div>
-        );
-    }
+
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="email"
+                    name="email"
+                    onChange={handleChange}
+                    value={email}
+                    placeholder="Email"
+                />
+
+                <input
+                    type="password"
+                    name="password"
+                    autoComplete="currentPassword"
+                    onChange={handleChange}
+                    value={password}
+                    placeholder="Password"
+                />
+
+                <div>
+                    <button type="submit">Login</button>
+                </div>
+            </form>
+
+            <button>
+                <Link to="/password">Reset Password</Link>
+            </button>
+            <button>
+                <Link to="/registration">Create an Account</Link>
+            </button>
+        </div>
+    );
 }

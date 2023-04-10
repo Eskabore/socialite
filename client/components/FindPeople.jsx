@@ -1,69 +1,56 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export default function FindPeople() {
-
     const [query, setQuery] = useState("");
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-
-        fetch(`users.json?q=${query}`, { // New route
+        fetch(`users.json?q=${query}`, {
             headers: {
-                'Content-type': 'application/json'
-            }
-        }).then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                return [];
-            }
+                "Content-type": "application/json",
+            },
         })
-            .then(usersData => {
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    return [];
+                }
+            })
+            .then((usersData) => {
                 setUsers(usersData);
             });
     }, [query]);
 
-    return(
+    return (
         <div>
-            <p>
-                Search People Bar:
-            </p>
+            <p>Search People Bar:</p>
 
             <input
                 autoComplete="off"
                 type="text"
                 name="query"
-                onChange={ (e) => setQuery(e.currentTarget.value) }
+                onChange={(e) => setQuery(e.currentTarget.value)}
                 value={query}
-                placeholder="Who zou want to seach"
+                placeholder="Who you want to search"
             />
 
-            {/* Using unordered list for fooping */}
-
             <ul>
-                {
-                    users.map(
-                        (user) => {
-                            return (
-                                <li  key={ user.id }>
-                                    <Link to={`/user/${user.id}`}>
-                                        <ul>
-                                            <img
-                                                src={ user.picture || "/avatardefault.png" }
-                                                alt={`${user.first} ${user.last}`}
-                                            />
-                                            { user.first } { user.last }
-
-                                        </ul>
-                                    </Link>
-                                </li>
-                            );
-                        }
-                    )}
+                {users.map(({ id, first, last, picture }) => (
+                    <li key={id}>
+                        <Link to={`/user/${id}`}>
+                            <ul>
+                                <img
+                                    src={picture || "/avatardefault.png"}
+                                    alt={`${first} ${last}`}
+                                />
+                                {first} {last}
+                            </ul>
+                        </Link>
+                    </li>
+                ))}
             </ul>
-
         </div>
     );
-
 }

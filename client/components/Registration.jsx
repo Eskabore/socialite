@@ -7,6 +7,7 @@ const Registration = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
+    const [isRegistered, setIsRegistered] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -40,7 +41,7 @@ const Registration = () => {
             });
 
             if (response.ok) {
-                location.reload();
+                setIsRegistered(true);
             } else {
                 setError(true);
             }
@@ -52,46 +53,54 @@ const Registration = () => {
     return (
         <div>
             <h1>This is the registration component</h1>
-            <div className="error">
-                {error && <p>Something went wrong! Please try again.</p>}
-            </div>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    name="first"
-                    onChange={handleChange}
-                    value={first}
-                    placeholder="First name"
-                />
-                <input
-                    type="text"
-                    name="last"
-                    onChange={handleChange}
-                    value={last}
-                    placeholder="Last name"
-                />
-                <input
-                    type="email"
-                    name="email"
-                    onChange={handleChange}
-                    value={email}
-                    placeholder="Email"
-                />
-                <input
-                    type="password"
-                    name="password"
-                    autoComplete="newPassword"
-                    onChange={handleChange}
-                    value={password}
-                    placeholder="Password"
-                />
-                <div>
-                    <button type="submit">Register Now</button>
-                </div>
-            </form>
-            <button>
-                <Link to="/login">Log In</Link>
-            </button>
+            {isRegistered ? (
+                <>
+                    <p>Registration successful! Please log in.</p>
+                    <button>
+                        <Link to="/login">Log In</Link>
+                    </button>
+                </>
+            ) : (
+                <>
+                    <div className="error">
+                        {error && <p>Something went wrong! Please try again.</p>}
+                    </div>
+                    <form onSubmit={handleSubmit}>
+                        <input
+                            type="text"
+                            name="first"
+                            onChange={handleChange}
+                            value={first}
+                            placeholder="First name"
+                        />
+                        <input
+                            type="text"
+                            name="last"
+                            onChange={handleChange}
+                            value={last}
+                            placeholder="Last name"
+                        />
+                        <input
+                            type="email"
+                            name="email"
+                            onChange={handleChange}
+                            value={email}
+                            placeholder="Email"
+                        />
+                        <input
+                            type="password"
+                            name="password"
+                            autoComplete="newPassword"
+                            onChange={handleChange}
+                            value={password}
+                            placeholder="Password"
+                        />
+                        <div>
+                            <button type="submit">Register Now</button>
+                        </div>
+                    </form>
+                </>
+            )}
         </div>
     );
 };

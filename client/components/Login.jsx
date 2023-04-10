@@ -1,14 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function Login() {
+const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
-    const registeredUser = useRef({ email: "", password: "" });
 
     const handleChange = (e) => {
-        const { name, value } = e.currentTarget;
+        const { name, value } = e.target;
+
         if (name === "email") {
             setEmail(value);
         } else if (name === "password") {
@@ -16,38 +16,29 @@ export default function Login() {
         }
     };
 
-    useEffect(() => {
-        if (registeredUser.current.email !== "" && registeredUser.current.password !== "") {
-            fetch("/login", {
-                method: "POST",
-                body: JSON.stringify(registeredUser.current),
-                headers: { "Content-Type": "application/json" },
-            })
-                .then((response) => {
-                    console.log("response is: ", response.ok);
-                    if (response.ok) {
-                        // User is logged-in
-                        // -> reload page to show logged-in
-                        location.reload();
-                    } else {
-                        // Update 'error' property in state
-                        setError(true);
-                    }
-                })
-                .catch((error) => {
-                    console.log("Error (/login): ", error);
-                });
-        }
-    }, [registeredUser]);
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("About to submit the form!");
-        console.log({ email, password });
+        const registeredUser = {
+            email,
+            password,
+        };
 
-        registeredUser.current.email = email;
-        registeredUser.current.password = password;
+        try {
+            const response = await fetch("/login", {
+                method: "POST",
+                body: JSON.stringify(registeredUser),
+                headers: { "Content-Type": "application/json" },
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                setError(true);
+            }
+        } catch (error) {
+            setError(true);
+        }
     };
 
     return (
@@ -56,7 +47,6 @@ export default function Login() {
             <div className="error">
                 {error && <p>Something went wrong! Please try again.</p>}
             </div>
-
             <form onSubmit={handleSubmit}>
                 <input
                     type="email"
@@ -65,7 +55,6 @@ export default function Login() {
                     value={email}
                     placeholder="Email"
                 />
-
                 <input
                     type="password"
                     name="password"
@@ -74,12 +63,10 @@ export default function Login() {
                     value={password}
                     placeholder="Password"
                 />
-
                 <div>
                     <button type="submit">Login</button>
                 </div>
             </form>
-
             <button>
                 <Link to="/password">Reset Password</Link>
             </button>
@@ -88,4 +75,6 @@ export default function Login() {
             </button>
         </div>
     );
-}
+};
+
+export default Login;

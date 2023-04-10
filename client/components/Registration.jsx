@@ -1,128 +1,99 @@
-import { Component } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default class Registration extends Component {
-    constructor(props) {
-        super(props);
+const Registration = () => {
+    const [first, setFirst] = useState("");
+    const [last, setLast] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState(false);
 
-        this.state = {
-            first: "",
-            last: "",
-            email: "",
-            password: "",
-            error: false,
-        };
+    const handleChange = (e) => {
+        const { name, value } = e.target;
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
+        if (name === "first") {
+            setFirst(value);
+        } else if (name === "last") {
+            setLast(value);
+        } else if (name === "email") {
+            setEmail(value);
+        } else if (name === "password") {
+            setPassword(value);
+        }
+    };
 
-    handleChange(e) {
-        console.log(e);
-        // `target` is the element that triggered the event
-        // `currentTarget`a` is the element that the event listener is attached to
-        this.setState(
-            {
-                [e.currentTarget.name]: e.currentTarget.value,
-            },
-            () => {
-                console.log(this.state);
-            }
-        );
-    }
-
-    handleSubmit(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        console.log("About to submit the form!");
-        console.log(this.state);
+        const newUser = {
+            first,
+            last,
+            email,
+            password,
+        };
 
-        // Create empty object to 'store' user inputs
-        const newUser = {};
-
-        newUser.first = this.state.first;
-        newUser.last = this.state.last;
-        newUser.email = this.state.email;
-        newUser.password = this.state.password;
-
-        console.log(newUser);
-
-        fetch("/registration", {
-            method: "POST",
-            body: JSON.stringify(newUser),
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then((response) => {
-                console.log("response is: ", response.ok);
-
-                if (response.ok) {
-                    // User is registered
-                    // -> reload page to show logged-in
-                    location.reload();
-                } else {
-                    // Update 'error' property in state
-                    this.setState({ error: true });
-                }
-            })
-            .catch((error) => {
-                console.log("Error (/registration): ", error);
+        try {
+            const response = await fetch("/registration", {
+                method: "POST",
+                body: JSON.stringify(newUser),
+                headers: { "Content-Type": "application/json" },
             });
-    }
 
-    render() {
-        return (
-            <div>
-                <h1>This is the registration component</h1>
-                <div className="error">{this.state.error && (
-                    <p>Something went wrong! Please try again.
-                    </p>
-                )}</div>
+            if (response.ok) {
+                location.reload();
+            } else {
+                setError(true);
+            }
+        } catch (error) {
+            setError(true);
+        }
+    };
 
-
-                <form onSubmit={ this.handleSubmit }>
-                    <input
-                        type="text"
-                        name="first"
-                        onChange={this.handleChange}
-                        value={this.state.first}
-                        placeholder="First name"
-                    />
-                    <input
-                        type="text"
-                        name="last"
-                        onChange={this.handleChange}
-                        value={this.state.last}
-                        placeholder="Last name"
-                    />
-
-                    <input
-                        type="email"
-                        name="email"
-                        onChange={this.handleChange}
-                        value={this.state.email}
-                        placeholder="Email"
-                    />
-
-                    <input
-                        type="password"
-                        name="password"
-                        autoComplete="newPassword"
-                        onChange={this.handleChange}
-                        value={this.state.password}
-                        placeholder="Password"
-                    />
-
-                    <div>
-                        <button type="submit">Register Now</button>
-                    </div>
-                </form>
-
-                <button>
-                    <Link to="/login">
-                        Log In
-                    </Link>
-                </button>
+    return (
+        <div>
+            <h1>This is the registration component</h1>
+            <div className="error">
+                {error && <p>Something went wrong! Please try again.</p>}
             </div>
-        );
-    }
-}
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    name="first"
+                    onChange={handleChange}
+                    value={first}
+                    placeholder="First name"
+                />
+                <input
+                    type="text"
+                    name="last"
+                    onChange={handleChange}
+                    value={last}
+                    placeholder="Last name"
+                />
+                <input
+                    type="email"
+                    name="email"
+                    onChange={handleChange}
+                    value={email}
+                    placeholder="Email"
+                />
+                <input
+                    type="password"
+                    name="password"
+                    autoComplete="newPassword"
+                    onChange={handleChange}
+                    value={password}
+                    placeholder="Password"
+                />
+                <div>
+                    <button type="submit">Register Now</button>
+                </div>
+            </form>
+            <button>
+                <Link to="/login">Log In</Link>
+            </button>
+        </div>
+    );
+};
+
+export default Registration;

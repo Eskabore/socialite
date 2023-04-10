@@ -1,5 +1,5 @@
 {
-    "name": "spiced-social-network",
+    "name": "socialite",
     "version": "1.0.0",
     "description": "",
     "main": "server/server.js",
@@ -27,8 +27,8 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-redux": "^8.0.5",
-        "react-router": "^6.4.3",
-        "react-router-dom": "^6.4.3",
+        "react-router": "^6.10.0",
+        "react-router-dom": "^6.10.0",
         "react-test-renderer": "^18.2.0",
         "redux": "^4.2.0",
         "redux-devtools-extension": "^2.13.2",

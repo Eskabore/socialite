@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+const ErrorMessage = () => (
+    <div className="error">
+        <p>Something went wrong! Please try again.</p>
+    </div>
+);
+
 const ResetPassword = () => {
     const [email, setEmail] = useState("");
     const [code, setCode] = useState("");
@@ -67,6 +73,7 @@ const ResetPassword = () => {
     if (step === 1) {
         return (
             <div>
+                {error && <ErrorMessage />}
                 <form onSubmit={handleSubmit}>
                     <input
                         type="email"
@@ -82,6 +89,7 @@ const ResetPassword = () => {
     } else if (step === 2) {
         return (
             <div>
+                {error && <ErrorMessage />}
                 <form onSubmit={handleVerify}>
                     <input
                         type="text"
